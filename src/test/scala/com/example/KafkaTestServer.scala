@@ -16,6 +16,7 @@ class KafkaTestServer {
   val zkClient = new ZkClient(zkServer.connectString, 30000, 30000, ZKStringSerializer)
 
   // setup Broker
+  val host = "localhost"
   val port = TestUtils.choosePort()
   val props = TestUtils.createBrokerConfig(brokerId, port, true)
 

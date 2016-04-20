@@ -9,12 +9,13 @@ import com.typesafe.config.ConfigFactory
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
 
-class CrawlerActor extends Actor with ActorLogging with AutoMarshaller {
+class CrawlerActor(kafkaProducer: SimpleKafkaProducer) extends Actor with ActorLogging with AutoMarshaller {
   import CrawlerActor._
   import context.dispatcher
 
   final implicit val materializer: ActorMaterializer = ActorMaterializer(ActorMaterializerSettings(context.system))
 
+  var lastStatisticSent: List[StatisticData] = Nil
 
   val statisticsServiceUrl = {
     val config = ConfigFactory.load()
@@ -24,6 +25,18 @@ class CrawlerActor extends Actor with ActorLogging with AutoMarshaller {
   def receive = {
   	case FetchData =>
 	    log.info("Data crawled!!!")
+
+      getStatistics() map { statistics =>
+        val newStatistics = statistics.filterNot(lastStatisticSent.toSet)
+
+        newStatistics match {
+          case head::tail => {
+            kafkaProducer.send[List[StatisticData]](newStatistics)
+            lastStatisticSent = statistics
+          }
+          case Nil =>
+        }
+      }
 
       println(Await.result(getStatistics(), Duration.Inf))
 
@@ -46,6 +59,6 @@ class CrawlerActor extends Actor with ActorLogging with AutoMarshaller {
 
 
 object CrawlerActor {
-  val props = Props[CrawlerActor]
+  val props = Props(classOf[CrawlerActor], new SimpleKafkaProducer("host", 1111, "test"))
   case object FetchData
 }
