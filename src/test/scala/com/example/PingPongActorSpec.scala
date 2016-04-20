@@ -1,5 +1,6 @@
 package com.example
 
+/*
 import akka.actor.ActorSystem
 import akka.actor.Actor
 import akka.actor.Props
@@ -34,3 +35,4 @@ class PingPongActorSpec(_system: ActorSystem) extends TestKit(_system) with Impl
   }
 
 }
+*/

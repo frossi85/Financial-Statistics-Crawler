@@ -40,6 +40,12 @@ libraryDependencies ++= Seq(
   "org.json4s" %% "json4s-jackson" % json4sVersion,
   "de.heikoseeberger" %% "akka-http-json4s" % "1.4.1",
 
+  // -- kafka --
+  "org.apache.kafka" % "kafka-clients" % "0.8.2.2",
+  "org.apache.kafka" % "kafka_2.11" % "0.8.2.2",
+  "org.apache.kafka" % "kafka_2.11" % "0.8.2.2" classifier("test"),
+  "org.apache.kafka" % "kafka-clients" % "0.8.2.2" % Test,
+
   "org.scalatest" %% "scalatest" % "2.2.6" % "test")
 
 

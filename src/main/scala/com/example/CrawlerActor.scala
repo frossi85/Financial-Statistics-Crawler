@@ -1,18 +1,13 @@
 package com.example
 
-import java.sql.{Date, Timestamp}
-
-import akka.actor.{Actor, ActorLogging, ActorSystem, Props}
+import akka.actor.{Actor, ActorLogging, Props}
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{HttpRequest, HttpResponse}
 import akka.http.scaladsl.unmarshalling.Unmarshal
 import akka.stream.{ActorMaterializer, ActorMaterializerSettings}
 import com.typesafe.config.ConfigFactory
-import de.heikoseeberger.akkahttpjson4s.Json4sSupport
-import org.json4s.{DefaultFormats, jackson}
-
 import scala.concurrent.duration.Duration
-import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.concurrent.{Await, Future}
 
 class CrawlerActor extends Actor with ActorLogging with AutoMarshaller {
   import CrawlerActor._
