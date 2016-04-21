@@ -1,18 +1,17 @@
 package com.example
 
-
 class DataSender(kafkaProducer: SimpleKafkaProducer) {
   var lastStatisticSent: List[StatisticData] = Nil
 
   def send(data: List[StatisticData]) = {
-    val newStatistics = data.filterNot(lastStatisticSent.toSet)
+    val updatedStatistics = data.filterNot(x =>
+      lastStatisticSent
+        .map(y => (y.symbol, y.Ask, y.Bid))
+        .contains((x.symbol, x.Ask, x.Bid))
+    )
 
-    newStatistics match {
-      case head::tail => {
-        kafkaProducer.send[List[StatisticData]](newStatistics)
-        lastStatisticSent = data
-      }
-      case Nil =>
-    }
+    updatedStatistics.map(x => kafkaProducer.send[StatisticData](x))
+
+    if(!updatedStatistics.isEmpty) lastStatisticSent = data
   }
 }

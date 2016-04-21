@@ -7,28 +7,23 @@ import org.scalatest.{FunSpec, Matchers}
 //import org.junit.Assert._
 import scala.collection.immutable.HashMap
 
-/*
 class SimpleKafkaProducerTest extends FunSpec with Matchers{
 
   private val topic = "test"
   private val groupId = "group0"
+  private val kafkaHelpers = new KafkaHelpers()
+
 
   case class MessageData(a: String, b: String)
 
   describe("The SimpleKafka Api") {
     it("Should send data using a producer") {
-      println("Test started!!!")
-
-      val server = new KafkaTestServer
-      server.cleanPreviousData(groupId)
-      server.createTopic(topic)
-
       //Send data to Kafka
-      val kafkaApi = new SimpleKafkaProducer("127.0.0.1", server.port, topic)
+      val kafkaApi = new SimpleKafkaProducer(kafkaHelpers.kafkaSocket(), topic)
       kafkaApi.send[MessageData](new MessageData("Hello", "World"))
 
       //Create consumer
-      val consumerProperties = TestUtils.createConsumerProperties(server.zkConnect, groupId, "consumer0", -1)
+      val consumerProperties = TestUtils.createConsumerProperties(kafkaHelpers.zookeeperSocket().toString(), groupId, "consumer0", -1)
       val consumer = kafka.consumer.Consumer.create(new ConsumerConfig(consumerProperties))
 
       val topicCountMap = HashMap(topic -> 1)
@@ -41,8 +36,6 @@ class SimpleKafkaProducerTest extends FunSpec with Matchers{
 
       // cleanup
       consumer.shutdown()
-      server.shutdown()
     }
   }
 }
-*/

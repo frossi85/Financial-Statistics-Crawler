@@ -23,7 +23,8 @@ class CrawlerActor(kafkaProducer: SimpleKafkaProducer) extends Actor with ActorL
 }
 
 object CrawlerActor {
-  val props = Props(classOf[CrawlerActor], new SimpleKafkaProducer("host", 1111, "test"))
+  val kafkaHelpers = new KafkaHelpers()
+  val props = Props(classOf[CrawlerActor], new SimpleKafkaProducer(kafkaHelpers.kafkaSocket(), kafkaHelpers.topic()))
   case object FetchData
 }
 
